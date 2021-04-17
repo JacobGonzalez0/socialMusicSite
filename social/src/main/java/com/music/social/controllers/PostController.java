@@ -2,7 +2,6 @@ package com.music.social.controllers;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.music.social.models.Musician;
 import com.music.social.models.Post;
 import com.music.social.models.User;
@@ -12,7 +11,6 @@ import com.music.social.repositories.PostRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,7 +52,7 @@ public class PostController {
         // Musician musician = musicianRepository.findByUser(user);
         // newPost.setMusician(musician);
 
-        postRepository.save(newPost)
+        postRepository.save(newPost);
 
         JSONObject response = new JSONObject();
         response.put("message", "Created Post!");
@@ -62,7 +60,7 @@ public class PostController {
         return response.toString();
     }
 
-    
+
 
     
 }
