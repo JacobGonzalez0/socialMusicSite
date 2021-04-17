@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAll();
-    List<Post> findAllbyMusician(Musician musician);
+    List<Post> findAllByMusician(Musician m);
     Post getOne(long id);
 
 }

@@ -25,6 +25,12 @@ public class Comment {
     @OneToOne
     private Post post;
 
+    @OneToOne
+    private User user;
+
+    @OneToOne
+    private Musician musician;
+
     public Comment() {
     }
 
@@ -68,6 +74,22 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Musician getMusician() {
+        return this.musician;
+    }
+
+    public void setMusician(Musician musician) {
+        this.musician = musician;
     }
 
 }
