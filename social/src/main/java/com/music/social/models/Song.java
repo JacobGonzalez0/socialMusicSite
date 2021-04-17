@@ -36,11 +36,13 @@ public class Song {
     @OneToOne
     private Image image;
 
+    private String url;
+
     public Song() {
     }
 
-    public Song(String title, String length, Musician artist) {
-        this.title = title;
+    public Song(String url, String length, Musician artist) {
+        this.url = url;
         this.length = length;
         this.artist = artist;
     }
@@ -110,5 +112,21 @@ public class Song {
         this.artist = artist;
     }
 
+
+    public Image getImage() {
+        return this.image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public String getUrl() {
+        return this.url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
     
 }
