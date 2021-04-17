@@ -1,0 +1,21 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "java",
+            "type": "shell",
+            "command": "cd social && ./mvnw spring-boot:run",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "vue",
+            "type": "shell",
+            "command": "cd vue && npm run serve",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}
