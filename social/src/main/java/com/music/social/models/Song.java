@@ -17,7 +17,6 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotEmpty(message = "Song must have a name")
     private String title;
 
     private String album;
