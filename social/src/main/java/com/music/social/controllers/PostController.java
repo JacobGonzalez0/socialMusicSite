@@ -531,7 +531,7 @@ public class PostController {
         if(!password.isEmpty()){
             BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder(11);
             String hash = bcrypt.encode(password);
-            user.setPassword(password);
+            user.setPassword(hash);
         }
         
 
