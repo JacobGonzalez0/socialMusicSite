@@ -1,13 +1,17 @@
 package com.music.social.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.music.social.models.Image;
+import com.music.social.models.Like;
 import com.music.social.models.Musician;
 import com.music.social.models.Post;
 import com.music.social.models.Song;
 import com.music.social.models.User;
+import com.music.social.repositories.LikeRepository;
 import com.music.social.repositories.MusicianRepository;
 import com.music.social.repositories.PostRepository;
 import com.music.social.repositories.SongRepository;
@@ -18,6 +22,7 @@ import com.music.social.utils.SongUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +41,9 @@ public class PostController {
     MusicianRepository musicianRepository;
 
     @Autowired
+    LikeRepository likeRepository;
+
+    @Autowired
     UserServices userServices;  
 
     /**
@@ -47,31 +55,25 @@ public class PostController {
      */
     @PostMapping("/post/create")
     public String createPost(
-        @Valid Post newPost,
         @RequestParam(name = "image") MultipartFile uploadedImage,
-        BindingResult bindingResult,
+        @RequestParam(name = "content") String content,
         HttpServletRequest request
     )throws Exception{
 
-        if(bindingResult.hasErrors()){
-            //create the response, get the first error and return it 
-            JSONObject response = new JSONObject();
-            response.put("error", bindingResult.getAllErrors().get(0).toString());
-            return response.toString();
-        }
 
         User user = userServices.getCurrentUser(request);
         Musician musician = musicianRepository.findByUser(user);
-        newPost.setMusician(musician);
+        Post post = new Post();
+        post.setMusician(musician);
+        post.setContent(content);
 
-        postRepository.save(newPost);
-        Image image = ImageUtil.uploadImage(uploadedImage, newPost);
-        newPost.setImage(image);
-        postRepository.save(newPost);
+        postRepository.save(post);
+        Image image = ImageUtil.uploadImage(uploadedImage, post);
+        post.setImage(image);
+        postRepository.save(post);
 
         JSONObject response = new JSONObject();
         response.put("message", "Created Post!");
-
         return response.toString();
     }
 
@@ -179,6 +181,8 @@ public class PostController {
         response.put("message", "Musician registered!");
         return response.toString();
     }
+
+    
 
 
 
