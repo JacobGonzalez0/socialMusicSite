@@ -15,12 +15,14 @@ import com.music.social.repositories.LikeRepository;
 import com.music.social.repositories.MusicianRepository;
 import com.music.social.repositories.PostRepository;
 import com.music.social.repositories.SongRepository;
+import com.music.social.repositories.UserRepository;
 import com.music.social.services.UserServices;
 import com.music.social.utils.ImageUtil;
 import com.music.social.utils.SongUtil;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,9 @@ public class PostController {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     ImageRepository imageRepository;
@@ -459,6 +464,82 @@ public class PostController {
         return response.toString();
     }
     
+    @PostMapping("/user/edit/{id}")
+    public String editUser(
+        @RequestParam(name = "email") String email,
+        @RequestParam(name = "username") String username,
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        User userEdit = userRepository.getOne(id);
+
+        if(userServices.userIsRole(user, "admin")){
+
+            userEdit.setEmail(email);
+            userEdit.setUsername(username);
+
+            JSONObject response = new JSONObject();
+            response.put("message", "User Edited!");
+            return response.toString();
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("error", "You are not an admin!");
+        return response.toString();
+        
+    }
+
+    @PostMapping("/user/delete")
+    public String deleteUser(
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        User userEdit = userRepository.getOne(id);
+
+        if(userServices.userIsRole(user, "admin") || user.equals(userEdit)){
+
+            userRepository.delete(userEdit);
+
+            JSONObject response = new JSONObject();
+            response.put("message", "User Deleted!");
+            return response.toString();
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("error", "You are not an admin!");
+        return response.toString();
+        
+    }
+
+    @PostMapping("/user/edit/")
+    public String editUserSelf(
+        @RequestParam(name = "email") String email,
+        @RequestParam(name = "username") String username,
+        @RequestParam(name = "password") String password,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+
+        user.setEmail(email);
+        user.setUsername(username);
+
+        if(!password.isEmpty()){
+            BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder(11);
+            String hash = bcrypt.encode(password);
+            user.setPassword(password);
+        }
+        
+
+        JSONObject response = new JSONObject();
+        response.put("message", "User Edited!");
+        return response.toString();
+        
+    }
 
 
 
