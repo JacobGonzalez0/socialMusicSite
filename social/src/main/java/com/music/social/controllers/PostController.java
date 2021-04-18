@@ -50,7 +50,8 @@ public class PostController {
     public String createPost(
         @Valid Post newPost,
         @RequestParam(name = "image") MultipartFile uploadedImage,
-        BindingResult bindingResult
+        BindingResult bindingResult,
+        HttpServletRequest request
     )throws Exception{
 
         if(bindingResult.hasErrors()){
@@ -60,7 +61,7 @@ public class PostController {
             return response.toString();
         }
 
-        User user = userServices.getCurrentUser();
+        User user = userServices.getCurrentUser(request);
         Musician musician = musicianRepository.findByUser(user);
         newPost.setMusician(musician);
 
@@ -74,6 +75,17 @@ public class PostController {
         return response.toString();
     }
 
+    /**
+     * 
+     * @param title
+     * @param album
+     * @param description
+     * @param track
+     * @param uploadedSong
+     * @param uploadedImage
+     * @return
+     * @throws Exception 
+     */
     @PostMapping("/song/create")
     public String createSong(
         @RequestParam(name = "title") String title,
@@ -81,11 +93,11 @@ public class PostController {
         @RequestParam(name = "description") String description,
         @RequestParam(name = "track") Long track,
         @RequestParam(name = "song") MultipartFile uploadedSong,
-        @RequestParam(name = "image") MultipartFile uploadedImage
+        @RequestParam(name = "image") MultipartFile uploadedImage,
+        HttpServletRequest request
     )throws Exception{
 
- 
-        User user = userServices.getCurrentUser();
+        User user = userServices.getCurrentUser(request);
         Musician musician = musicianRepository.findByUser(user);
 
 
