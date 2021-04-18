@@ -15,7 +15,6 @@ import com.music.social.services.UserServices;
 import com.music.social.utils.ImageUtil;
 import com.music.social.utils.SongUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;

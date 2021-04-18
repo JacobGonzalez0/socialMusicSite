@@ -1,9 +1,7 @@
 package com.music.social.utils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,9 +11,6 @@ import java.time.YearMonth;
 import java.util.Random;
 
 import javax.annotation.PostConstruct;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 
 import com.music.social.models.Musician;
 import com.music.social.models.Song;
@@ -26,7 +21,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -77,11 +71,7 @@ public class SongUtil {
                 // Double durationInSeconds = (frames+0.0) / format.getFrameRate();  
                 // String length = durationInSeconds.toString();
 
-                File file = new File(filename);
-                FileUtils.copyInputStreamToFile(uploadedSong.getInputStream(), file);
-                AudioFile f = AudioFileIO.read(file);
-                Tag tag = f.getTag();
-                int length = f.getAudioHeader().getTrackLength();
+                
 
                 if(Files.notExists(path)){
                     try{
@@ -91,9 +81,14 @@ public class SongUtil {
                         return null;
                     }
                 }
-                
+
+                int length;
+
                 try {
-                    uploadedSong.transferTo(Paths.get(UPLOAD_PATH + dir + filename));
+                    File file = new File(UPLOAD_PATH + dir + filename);
+                    FileUtils.copyInputStreamToFile(uploadedSong.getInputStream(), file);
+                    AudioFile f = AudioFileIO.read(file);
+                    length = f.getAudioHeader().getTrackLength();
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
