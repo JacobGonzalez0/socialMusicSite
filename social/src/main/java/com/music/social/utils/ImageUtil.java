@@ -101,10 +101,10 @@ public class ImageUtil {
         Path path = Paths.get(UPLOAD_PATH + dir);
 
         //check if image is actually image;
-        if( mime == "image/jpeg"||
-            mime == "image/png"||
-            mime == "image/webp"||
-            mime == "image/gif"  ){
+        if( mime.equals("image/jpeg")||
+            mime.equals("image/png")||
+            mime.equals("image/webp")||
+            mime.equals("image/gif")  ){
 
                 if(Files.notExists(path)){
                     try{
@@ -147,10 +147,10 @@ public class ImageUtil {
         Path path = Paths.get(UPLOAD_PATH + dir);
 
         //check if image is actually image;
-        if( mime == "image/jpeg"||
-            mime == "image/png"||
-            mime == "image/webp"||
-            mime == "image/gif"  ){
+        if( mime.equals("image/jpeg")||
+            mime.equals("image/png")||
+            mime.equals("image/webp")||
+            mime.equals("image/gif")  ){
 
                 if(Files.notExists(path)){
                     try{
@@ -193,10 +193,10 @@ public class ImageUtil {
         Path path = Paths.get(UPLOAD_PATH + dir);
 
         //check if image is actually image;
-        if( mime == "image/jpeg"||
-            mime == "image/png"||
-            mime == "image/webp"||
-            mime == "image/gif"  ){
+        if( mime.equals("image/jpeg")||
+            mime.equals("image/png")||
+            mime.equals("image/webp")||
+            mime.equals("image/gif")  ){
 
                 if(Files.notExists(path)){
                     try{

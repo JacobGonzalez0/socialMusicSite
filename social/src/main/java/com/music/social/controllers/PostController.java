@@ -145,17 +145,28 @@ public class PostController {
     public String createMusician(
         @RequestParam(name = "image") MultipartFile uploadedImage,
         @RequestParam(name = "banner") MultipartFile uploadedBanner,
-        Musician musician,
+        @RequestParam(name = "tagline") String tagline,
+        @RequestParam(name = "website") String website,
+        @RequestParam(name = "bio") String bio,
+        @RequestParam(name = "pronouns") String pronouns,
+        @RequestParam(name = "name") String name,
         HttpServletRequest request
     )throws Exception{
 
         User user = userServices.getCurrentUser(request);
         Musician checkMusician = musicianRepository.findByUser(user);
+
         if(checkMusician != null){
             JSONObject response = new JSONObject();
             response.put("error", "Musician already exists under current user");
             return response.toString();
         }
+        Musician musician = new Musician();
+        musician.setBio(bio);
+        musician.setName(name);
+        musician.setPronouns(pronouns);
+        musician.setTagline(tagline);
+        musician.setUser(user);
 
         musicianRepository.save(musician);
         Image image = ImageUtil.uploadImage(uploadedImage, musician);
@@ -166,7 +177,6 @@ public class PostController {
 
         JSONObject response = new JSONObject();
         response.put("message", "Musician registered!");
-
         return response.toString();
     }
 

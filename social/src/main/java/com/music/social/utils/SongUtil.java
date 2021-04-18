@@ -59,20 +59,6 @@ public class SongUtil {
             mime.equals("audio/ogg") ||
             mime.equals("audio/webm")  ){
 
-
-                // //read audio data from whatever source (file/classloader/etc.)
-                // InputStream audioSrc = uploadedSong.getInputStream();
-                // //add buffer for mark/reset support
-                // InputStream bufferedIn = new BufferedInputStream(audioSrc);
-                // AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedIn);
-                // System.out.println(audioInputStream);
-                // AudioFormat format = audioInputStream.getFormat();
-                // long frames = audioInputStream.getFrameLength();
-                // Double durationInSeconds = (frames+0.0) / format.getFrameRate();  
-                // String length = durationInSeconds.toString();
-
-                
-
                 if(Files.notExists(path)){
                     try{
                         Files.createDirectories(path);

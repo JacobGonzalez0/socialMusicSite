@@ -3,16 +3,12 @@ package com.music.social.controllers;
 
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 import com.music.social.models.AuthGroup;
-import com.music.social.models.AuthenticationRequest;
-import com.music.social.models.AuthenticationResponse;
 import com.music.social.models.User;
 import com.music.social.repositories.AuthGroupRepository;
 import com.music.social.repositories.UserRepository;
@@ -26,7 +22,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.http.ResponseEntity;
 
 @RestController
 public class AuthenticationController{
