@@ -1,12 +1,8 @@
 package com.music.social.controllers;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import com.music.social.models.Image;
-import com.music.social.models.Like;
 import com.music.social.models.Musician;
 import com.music.social.models.Post;
 import com.music.social.models.Song;
@@ -21,7 +17,6 @@ import com.music.social.utils.SongUtil;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,6 +69,31 @@ public class PostController {
 
         JSONObject response = new JSONObject();
         response.put("message", "Created Post!");
+        return response.toString();
+    }
+
+    @PostMapping("/post/remove/{id}")
+    public String removePost(
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        Musician musician = musicianRepository.findByUser(user);
+        Post post = postRepository.getOne(id);
+        //check if musician owns the post
+        if(post.getMusician().equals(musician)){
+
+            postRepository.delete(post);
+            
+            JSONObject response = new JSONObject();
+            response.put("message", "Post Deleted");
+            return response.toString();
+
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("message", "You do not own the post!");
         return response.toString();
     }
 
@@ -143,6 +163,31 @@ public class PostController {
         
     }
 
+    @PostMapping("/song/remove/{id}")
+    public String removeSong(
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        Musician musician = musicianRepository.findByUser(user);
+        Song song = songRepository.getOne(id);
+        //check if musician owns the post
+        if(song.getArtist().equals(musician)){
+
+            songRepository.delete(song);
+            
+            JSONObject response = new JSONObject();
+            response.put("message", "Song Deleted");
+            return response.toString();
+
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("message", "You do not own the song!");
+        return response.toString();
+    }
+
     @PostMapping("/musician/create")
     public String createMusician(
         @RequestParam(name = "image") MultipartFile uploadedImage,
@@ -182,6 +227,30 @@ public class PostController {
         return response.toString();
     }
 
+    @PostMapping("/musician/remove/{id}")
+    public String removeMusician(
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        
+        //check if admin
+        if(userServices.userIsRole(user, "ADMIN")){
+
+            Musician musician = musicianRepository.getOne(id);
+            musicianRepository.delete(musician);
+
+            JSONObject response = new JSONObject();
+            response.put("message", "Musician Deleted");
+            return response.toString();
+
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("message", "You are not an admin!");
+        return response.toString();
+    }
     
 
 
