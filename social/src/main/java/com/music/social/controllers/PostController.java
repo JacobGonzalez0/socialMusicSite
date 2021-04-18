@@ -122,7 +122,7 @@ public class PostController {
         Musician musician = musicianRepository.findByUser(user);
         Post post = postRepository.getOne(id);
         //check if musician owns the post
-        if(post.getMusician().equals(musician)){
+        if(post.getMusician().equals(musician) || userServices.userIsRole(user, "admin")){
 
             List<Like> likes = likeRepository.findAllByPost(post);
             likes.forEach( like ->{
@@ -272,7 +272,7 @@ public class PostController {
         Musician musician = musicianRepository.findByUser(user);
         Song song = songRepository.getOne(id);
         //check if musician owns the post
-        if(song.getArtist().equals(musician)){
+        if(song.getArtist().equals(musician) || userServices.userIsRole(user, "admin")){
 
             List<Like> likes = likeRepository.findAllBySong(song);
             likes.forEach( like ->{
