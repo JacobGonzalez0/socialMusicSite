@@ -44,18 +44,19 @@ public class ImageUtil {
     }
 
     public static Image uploadImage(MultipartFile uploadedImage, Song song) throws Exception{
-
+        
         String mime = uploadedImage.getContentType();
         String ext = FilenameUtils.getExtension(uploadedImage.getOriginalFilename());
         String dir = getYearAndMonthUrlFragment();
         String filename = RandomStringUtils.random(7, true, true) + "." + ext;
         Path path = Paths.get(UPLOAD_PATH + dir);
-
+        
+        
         //check if image is actually image;
-        if( mime == "image/jpeg"||
-            mime == "image/png"||
-            mime == "image/webp"||
-            mime == "image/gif"  ){
+        if( mime.equals("image/jpeg")||
+            mime.equals("image/png")||
+            mime.equals("image/webp")||
+            mime.equals("image/gif")  ){
 
                 if(Files.notExists(path)){
                     try{
@@ -83,7 +84,8 @@ public class ImageUtil {
         
                 return image;
         }else{
-            throw new Exception("Image type not valid");
+            System.out.println(mime);
+            throw new Exception("Image type not valid: " + mime);
         }
 
         
@@ -129,7 +131,7 @@ public class ImageUtil {
         
                 return image;
         }else{
-            throw new Exception("Image type not valid");
+            throw new Exception("Image type not valid: " + mime);
         }
 
         
@@ -175,7 +177,7 @@ public class ImageUtil {
         
                 return image;
         }else{
-            throw new Exception("Image type not valid");
+            throw new Exception("Image type not valid: " + mime);
         }
 
         

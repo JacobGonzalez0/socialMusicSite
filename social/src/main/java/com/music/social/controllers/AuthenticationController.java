@@ -54,24 +54,32 @@ public class AuthenticationController{
 		return "Hello World";
 	}
 
-	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    @PostMapping("/login")
+    public String login(
+        User user,
+        BindingResult bindingResult) throws JSONException {
 		
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userDetailsService
+            .loadUserByUsername(user.getUsername());
 		
 		try {
-			if(this.bCrypt.matches(authenticationRequest.getPassword(),userDetails.getPassword())){
+			if(this.bCrypt.matches(user.getPassword(),userDetails.getPassword())){
 				final String token = jwtTokenUtil.generateToken(userDetails);
 
-				return ResponseEntity.ok(new AuthenticationResponse(token));
+				JSONObject response = new JSONObject();
+                response.put("token", token);
+                return response.toString();
 			}
 			else{
-				throw new Exception("Incorrect username or password");
+                JSONObject response = new JSONObject();
+                response.put("error", "Incorrect username or password");
+                return response.toString();
 			}
 		}
 		catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
+			JSONObject response = new JSONObject();
+            response.put("error", "Incorrect username or password");
+            return response.toString();
 		}
 
 	}

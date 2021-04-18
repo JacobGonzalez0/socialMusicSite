@@ -1,6 +1,9 @@
 package com.music.social.utils;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,12 +21,17 @@ import com.music.social.models.Musician;
 import com.music.social.models.Song;
 import com.music.social.repositories.SongRepository;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @Component
 public class SongUtil {
@@ -52,17 +60,28 @@ public class SongUtil {
         Path path = Paths.get(UPLOAD_PATH + dir);
 
         //check if image is actually image;
-        if( mime == "audio/aac"||
-            mime == "audio/mpeg"||
-            mime == "audio/ogg"||
-            mime == "audio/webm"  ){
+        if( mime.equals("audio/aac") ||
+            mime.equals("audio/mpeg")||
+            mime.equals("audio/ogg") ||
+            mime.equals("audio/webm")  ){
 
-                //get the audio files length 
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(uploadedSong.getInputStream());
-                AudioFormat format = audioInputStream.getFormat();
-                long frames = audioInputStream.getFrameLength();
-                Double durationInSeconds = (frames+0.0) / format.getFrameRate();  
-                String length = durationInSeconds.toString();
+
+                // //read audio data from whatever source (file/classloader/etc.)
+                // InputStream audioSrc = uploadedSong.getInputStream();
+                // //add buffer for mark/reset support
+                // InputStream bufferedIn = new BufferedInputStream(audioSrc);
+                // AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedIn);
+                // System.out.println(audioInputStream);
+                // AudioFormat format = audioInputStream.getFormat();
+                // long frames = audioInputStream.getFrameLength();
+                // Double durationInSeconds = (frames+0.0) / format.getFrameRate();  
+                // String length = durationInSeconds.toString();
+
+                File file = new File(filename);
+                FileUtils.copyInputStreamToFile(uploadedSong.getInputStream(), file);
+                AudioFile f = AudioFileIO.read(file);
+                Tag tag = f.getTag();
+                int length = f.getAudioHeader().getTrackLength();
 
                 if(Files.notExists(path)){
                     try{
@@ -82,7 +101,7 @@ public class SongUtil {
         
                 Song song = new Song(
                     UPLOAD_PATH + dir + filename,
-                    length,
+                    String.valueOf(length),
                     artist
                 );
                 
@@ -91,7 +110,7 @@ public class SongUtil {
 
                 return song;
         }else{
-            throw new Exception("Image type not valid");
+            throw new Exception("Sound filetype not valid");
         }
 
     }
