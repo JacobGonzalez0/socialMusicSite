@@ -22,7 +22,7 @@ public class Post {
     @NotEmpty(message = "Post must not be blank")
     private String content;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Musician musician;
 
     @OneToOne(cascade = CascadeType.ALL)

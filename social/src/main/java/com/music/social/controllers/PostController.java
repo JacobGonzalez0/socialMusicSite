@@ -79,6 +79,39 @@ public class PostController {
         return response.toString();
     }
 
+    @PostMapping("/post/edit/{id}")
+    public String editPost(
+        @RequestParam(name = "image") MultipartFile uploadedImage,
+        @RequestParam(name = "content") String content,
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+
+        User user = userServices.getCurrentUser(request);
+        Musician musician = musicianRepository.findByUser(user);
+        Post post = postRepository.getOne(id);
+        if(post.getMusician().equals(musician)){
+            post.setContent(content);
+            postRepository.save(post);
+            if(!uploadedImage.isEmpty()){
+                Image image = ImageUtil.uploadImage(uploadedImage, post);
+                post.setImage(image);
+            }
+            postRepository.save(post);
+            
+
+            JSONObject response = new JSONObject();
+            response.put("message", "Edited Post!");
+            return response.toString();
+        }
+        
+
+        JSONObject response = new JSONObject();
+        response.put("message", "You do not own the post!");
+        return response.toString();
+    }
+
     @PostMapping("/post/remove/{id}")
     public String removePost(
         @PathVariable Long id,
@@ -153,6 +186,7 @@ public class PostController {
                 song.setAlbum(album);
                 song.setDescription(description);
                 song.setTrack(track);
+                song.setArtist(musician);
                 songRepository.save(song);
 
                 JSONObject response = new JSONObject();
@@ -173,6 +207,58 @@ public class PostController {
             response.put("error", "Song upload failed!");
             return response.toString();
         }
+        
+    }
+
+    @PostMapping("/song/edit/{id}")
+    public String editSong(
+        @RequestParam(name = "title") String title,
+        @RequestParam(name = "album") String album,
+        @RequestParam(name = "description") String description,
+        @RequestParam(name = "track") Long track,
+        @RequestParam(name = "image") MultipartFile uploadedImage,
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        Musician musician = musicianRepository.findByUser(user);
+        Song song = songRepository.getOne(id);
+
+        if(song.getArtist().equals(musician)){
+
+            try{
+
+                if(!uploadedImage.isEmpty()){
+
+                    Image image = ImageUtil.uploadImage(uploadedImage, song);
+                    song.setImage(image);
+
+                }
+                
+                song.setTitle(title);
+                song.setAlbum(album);
+                song.setDescription(description);
+                song.setTrack(track);
+                songRepository.save(song);
+
+                JSONObject response = new JSONObject();
+                response.put("message", "Song Updated!");
+
+                return response.toString();
+
+            }catch(Exception e){
+                JSONObject response = new JSONObject();
+                response.put("error", "Edit failed!");
+                return response.toString();
+            }
+            
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("error", "You do not own the song!");
+        return response.toString();
+
         
     }
 
@@ -232,6 +318,7 @@ public class PostController {
         musician.setName(name);
         musician.setPronouns(pronouns);
         musician.setTagline(tagline);
+        musician.setWebsite(website);
         musician.setUser(user);
 
         musicianRepository.save(musician);
@@ -246,6 +333,101 @@ public class PostController {
         return response.toString();
     }
 
+    @PostMapping("/musician/edit/{id}")
+    public String editMusician(
+        @RequestParam(name = "image") MultipartFile uploadedImage,
+        @RequestParam(name = "banner") MultipartFile uploadedBanner,
+        @RequestParam(name = "tagline") String tagline,
+        @RequestParam(name = "website") String website,
+        @RequestParam(name = "bio") String bio,
+        @RequestParam(name = "pronouns") String pronouns,
+        @RequestParam(name = "name") String name,
+        @PathVariable Long id,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        Musician musician = musicianRepository.getOne(id);
+
+        if(userServices.userIsRole(user, "admin")){
+
+            musician.setBio(bio);
+            musician.setName(name);
+            musician.setPronouns(pronouns);
+            musician.setTagline(tagline);
+            musician.setWebsite(website);
+    
+            musicianRepository.save(musician);
+            if(!uploadedImage.isEmpty()){
+
+                Image image = ImageUtil.uploadImage(uploadedImage, musician);
+                musician.setImage(image);
+            }
+    
+            if(!uploadedBanner.isEmpty()){
+                Image banner = ImageUtil.uploadImage(uploadedBanner, musician);
+                musician.setBanner(banner);
+            }
+            musicianRepository.save(musician);
+    
+            JSONObject response = new JSONObject();
+            response.put("message", "Musician Edited!");
+            return response.toString();
+        }
+
+        JSONObject response = new JSONObject();
+        response.put("error", "You are not an admin!");
+        return response.toString();
+        
+    }
+
+    @PostMapping("/musician/edit/")
+    public String editMusicianSelf(
+        @RequestParam(name = "image") MultipartFile uploadedImage,
+        @RequestParam(name = "banner") MultipartFile uploadedBanner,
+        @RequestParam(name = "tagline") String tagline,
+        @RequestParam(name = "website") String website,
+        @RequestParam(name = "bio") String bio,
+        @RequestParam(name = "pronouns") String pronouns,
+        @RequestParam(name = "name") String name,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        Musician musician = musicianRepository.findByUser(user);
+
+        if(musician == null){
+            JSONObject response = new JSONObject();
+            response.put("error", "Youre not a musician! :( sorry");
+            return response.toString();
+        }
+
+        musician.setBio(bio);
+        musician.setName(name);
+        musician.setPronouns(pronouns);
+        musician.setTagline(tagline);
+        musician.setWebsite(website);
+
+        musicianRepository.save(musician);
+        if(!uploadedImage.isEmpty()){
+
+            Image image = ImageUtil.uploadImage(uploadedImage, musician);
+            musician.setImage(image);
+        }
+
+        if(!uploadedBanner.isEmpty()){
+            Image banner = ImageUtil.uploadImage(uploadedBanner, musician);
+            musician.setBanner(banner);
+        }
+        musicianRepository.save(musician);
+
+        JSONObject response = new JSONObject();
+        response.put("message", "Profile Edited!");
+        return response.toString();
+        
+        
+    }
+
     @PostMapping("/musician/remove/{id}")
     public String removeMusician(
         @PathVariable Long id,
@@ -255,7 +437,7 @@ public class PostController {
         User user = userServices.getCurrentUser(request);
         
         //check if admin
-        if(userServices.userIsRole(user, "ADMIN")){
+        if(userServices.userIsRole(user, "admin")){
 
             Musician musician = musicianRepository.getOne(id);
             musicianRepository.delete(musician);

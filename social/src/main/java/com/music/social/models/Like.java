@@ -18,16 +18,16 @@ public class Like {
     private long id;
 
     @NotNull(message = "User must be included in like")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Post post;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Song song;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Comment comment;
 
     public Like() {
