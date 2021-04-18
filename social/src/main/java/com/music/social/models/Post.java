@@ -1,9 +1,12 @@
 package com.music.social.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id; 
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -19,10 +22,10 @@ public class Post {
     @NotEmpty(message = "Post must not be blank")
     private String content;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Musician musician;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Image image;
 
     public Post() {

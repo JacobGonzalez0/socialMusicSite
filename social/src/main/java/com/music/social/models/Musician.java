@@ -1,5 +1,6 @@
 package com.music.social.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,10 +30,10 @@ public class Musician {
     @OneToOne
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Image image;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Image banner;
 
 

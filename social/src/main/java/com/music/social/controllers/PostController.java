@@ -1,12 +1,16 @@
 package com.music.social.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.music.social.models.Image;
+import com.music.social.models.Like;
 import com.music.social.models.Musician;
 import com.music.social.models.Post;
 import com.music.social.models.Song;
 import com.music.social.models.User;
+import com.music.social.repositories.ImageRepository;
 import com.music.social.repositories.LikeRepository;
 import com.music.social.repositories.MusicianRepository;
 import com.music.social.repositories.PostRepository;
@@ -28,6 +32,9 @@ public class PostController {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     @Autowired
     SongRepository songRepository;
@@ -84,6 +91,12 @@ public class PostController {
         //check if musician owns the post
         if(post.getMusician().equals(musician)){
 
+            List<Like> likes = likeRepository.findAllByPost(post);
+            likes.forEach( like ->{
+                likeRepository.delete(like);
+            });
+            Image image = imageRepository.getOne(post.getImage().getId());
+            imageRepository.delete(image);
             postRepository.delete(post);
             
             JSONObject response = new JSONObject();
@@ -175,6 +188,12 @@ public class PostController {
         //check if musician owns the post
         if(song.getArtist().equals(musician)){
 
+            List<Like> likes = likeRepository.findAllBySong(song);
+            likes.forEach( like ->{
+                likeRepository.delete(like);
+            });
+            Image image = imageRepository.getOne(song.getImage().getId());
+            imageRepository.delete(image);
             songRepository.delete(song);
             
             JSONObject response = new JSONObject();

@@ -1,5 +1,6 @@
 package com.music.social.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,16 +18,16 @@ public class Like {
     private long id;
 
     @NotNull(message = "User must be included in like")
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Post post;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Song song;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Comment comment;
 
     public Like() {
