@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 
 import com.music.social.models.Image;
 import com.music.social.models.Musician;
+import com.music.social.models.Post;
 import com.music.social.models.Song;
 import com.music.social.models.User;
 import com.music.social.repositories.ImageRepository;
@@ -124,6 +125,52 @@ public class ImageUtil {
                 Image image = new Image(
                     UPLOAD_PATH + dir + filename,
                     user
+                );
+                
+                //save and return the image to be attached to the user
+                imageDao.save(image);
+        
+                return image;
+        }else{
+            throw new Exception("Image type not valid: " + mime);
+        }
+
+        
+    }
+
+    public static Image uploadImage(MultipartFile uploadedImage, Post post) throws Exception{
+
+        String mime = uploadedImage.getContentType();
+        String ext = FilenameUtils.getExtension(uploadedImage.getOriginalFilename());
+        String dir = getYearAndMonthUrlFragment();
+        String filename = RandomStringUtils.random(7, true, true) + "." + ext;
+        Path path = Paths.get(UPLOAD_PATH + dir);
+
+        //check if image is actually image;
+        if( mime == "image/jpeg"||
+            mime == "image/png"||
+            mime == "image/webp"||
+            mime == "image/gif"  ){
+
+                if(Files.notExists(path)){
+                    try{
+                        Files.createDirectories(path);
+                    }catch(IOException e){
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+                
+                try {
+                    uploadedImage.transferTo(Paths.get(UPLOAD_PATH + dir + filename));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+        
+                Image image = new Image(
+                    UPLOAD_PATH + dir + filename,
+                    post
                 );
                 
                 //save and return the image to be attached to the user

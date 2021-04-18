@@ -32,8 +32,22 @@ public class Musician {
     @OneToOne
     private Image image;
 
+    @OneToOne
+    private Image banner;
+
 
     public Musician() {
+    }
+
+    public Musician(String name, String tagline, String website, String bio, String pronouns, User user, Image image, Image banner) {
+        this.name = name;
+        this.tagline = tagline;
+        this.website = website;
+        this.bio = bio;
+        this.pronouns = pronouns;
+        this.user = user;
+        this.image = image;
+        this.banner = banner;
     }
 
     public Musician(String name, String tagline, String website, String bio, String pronouns, User user) {
@@ -105,6 +119,22 @@ public class Musician {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Image getImage() {
+        return this.image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Image getBanner() {
+        return this.banner;
+    }
+
+    public void setBanner(Image banner) {
+        this.banner = banner;
     }
 
 

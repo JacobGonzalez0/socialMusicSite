@@ -65,7 +65,8 @@ public class PostController {
         Musician musician = musicianRepository.findByUser(user);
         newPost.setMusician(musician);
 
-        Image image = ImageUtil.uploadImage(uploadedImage, musician);
+        postRepository.save(newPost);
+        Image image = ImageUtil.uploadImage(uploadedImage, newPost);
         newPost.setImage(image);
         postRepository.save(newPost);
 
@@ -97,22 +98,75 @@ public class PostController {
         HttpServletRequest request
     )throws Exception{
 
+        if(uploadedSong.isEmpty()){
+            JSONObject response = new JSONObject();
+            response.put("error", "No song uploaded, please attach file");
+            return response.toString();
+        }
+
         User user = userServices.getCurrentUser(request);
         Musician musician = musicianRepository.findByUser(user);
 
+        try{
 
-        Song song = SongUtil.uploadSong(uploadedSong, musician);
+            Song song = SongUtil.uploadSong(uploadedSong, musician);
 
-        Image image = ImageUtil.uploadImage(uploadedImage, song);
-        song.setImage(image);
-        song.setTitle(title);
-        song.setAlbum(album);
-        song.setDescription(description);
-        song.setTrack(track);
-        songRepository.save(song);
+            try{
+
+                Image image = ImageUtil.uploadImage(uploadedImage, song);
+                song.setImage(image);
+                song.setTitle(title);
+                song.setAlbum(album);
+                song.setDescription(description);
+                song.setTrack(track);
+                songRepository.save(song);
+
+                JSONObject response = new JSONObject();
+                response.put("message", "Song Uploaded!");
+
+                return response.toString();
+
+            }catch(Exception e){
+                JSONObject response = new JSONObject();
+                response.put("error", "Image upload failed!");
+                return response.toString();
+            }
+
+
+
+        }catch(Exception e){
+            JSONObject response = new JSONObject();
+            response.put("error", "Song upload failed!");
+            return response.toString();
+        }
+        
+    }
+
+    @PostMapping("/musician/create")
+    public String createMusician(
+        @RequestParam(name = "image") MultipartFile uploadedImage,
+        @RequestParam(name = "banner") MultipartFile uploadedBanner,
+        Musician musician,
+        HttpServletRequest request
+    )throws Exception{
+
+        User user = userServices.getCurrentUser(request);
+        Musician checkMusician = musicianRepository.findByUser(user);
+        if(checkMusician != null){
+            JSONObject response = new JSONObject();
+            response.put("error", "Musician already exists under current user");
+            return response.toString();
+        }
+
+        musicianRepository.save(musician);
+        Image image = ImageUtil.uploadImage(uploadedImage, musician);
+        Image banner = ImageUtil.uploadImage(uploadedBanner, musician);
+        musician.setImage(image);
+        musician.setBanner(banner);
+        musicianRepository.save(musician);
 
         JSONObject response = new JSONObject();
-        response.put("message", "Created Post!");
+        response.put("message", "Musician registered!");
 
         return response.toString();
     }
