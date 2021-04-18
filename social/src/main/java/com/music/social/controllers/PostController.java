@@ -271,6 +271,12 @@ public class PostController {
         User user = userServices.getCurrentUser(request);
         Musician musician = musicianRepository.findByUser(user);
         Song song = songRepository.getOne(id);
+
+        if(song == null){
+            JSONObject response = new JSONObject();
+            response.put("error", "Song does not exist");
+            return response.toString();
+        }
         //check if musician owns the post
         if(song.getArtist().equals(musician) || userServices.userIsRole(user, "admin")){
 
