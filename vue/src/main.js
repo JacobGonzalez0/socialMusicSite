@@ -16,3 +16,4 @@ new Vue({
 }).$mount('#app')
 
 Vue.use(VueToast);
+Vue.prototype.$hostname = 'http://localhost:8080/'

@@ -81,7 +81,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfi
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable().cors()
-        .and().authorizeRequests().antMatchers("/login","/register").permitAll().
+        .and().authorizeRequests().antMatchers("/login","/register","/images/**","/songs/**").permitAll().
 						anyRequest().authenticated().and().
 						exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

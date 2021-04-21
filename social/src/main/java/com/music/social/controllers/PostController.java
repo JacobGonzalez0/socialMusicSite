@@ -23,6 +23,7 @@ import com.music.social.utils.SongUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -117,7 +118,7 @@ public class PostController {
         return response.toString();
     }
 
-    @PostMapping("/post/remove/{id}")
+    @DeleteMapping("/post/remove/{id}")
     public String removePost(
         @PathVariable Long id,
         HttpServletRequest request
