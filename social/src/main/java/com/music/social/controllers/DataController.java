@@ -141,7 +141,7 @@ public class DataController {
     }
 
     @GetMapping("/post/musician/{id}")
-    public String getPostByMusician(
+    public String getPostByArtists(
         @PathVariable Long id
     ){
         Musician m = musicianRepository.getOne(id);
@@ -186,7 +186,7 @@ public class DataController {
         return response.toString();
     }
 
-    @GetMapping("/post/musician/{id}")
+    @GetMapping("/post/{id}")
     public String getPost(
         @PathVariable Long id
     ){
@@ -284,6 +284,132 @@ public class DataController {
         musician.put("image",imageMus);
     
         return musician.toString();
+    }
+
+    @GetMapping("/songs/all")
+    public String getAllSongs(){
+        List<Song> songs = songRepository.findAll();
+
+        JSONArray response = new JSONArray();
+
+        for(int i = 0; i < songs.size();i++){
+
+            JSONObject song = new JSONObject();
+            song.put("title", songs.get(i).getTitle());
+            song.put("album", songs.get(i).getAlbum());
+            song.put("description",songs.get(i).getDescription());
+            song.put("track", songs.get(i).getTrack());
+            song.put("length", songs.get(i).getLength());
+            song.put("url", songs.get(i).getUrl());
+            
+            JSONObject musician = new JSONObject();
+            musician.put("id", songs.get(i).getArtist().getId());
+            musician.put("name", songs.get(i).getArtist().getName());
+            musician.put("tagline", songs.get(i).getArtist().getTagline());
+            musician.put("website", songs.get(i).getArtist().getWebsite());
+            musician.put("bio", songs.get(i).getArtist().getBio());
+            musician.put("pronouns", songs.get(i).getArtist().getPronouns());
+    
+            JSONObject banner = new JSONObject();
+            banner.put("id", songs.get(i).getArtist().getBanner().getId());
+            banner.put("url", songs.get(i).getArtist().getBanner().getUrl());
+            musician.put("banner",banner);
+    
+            JSONObject imageMus = new JSONObject();
+            imageMus.put("id", songs.get(i).getArtist().getImage().getId());
+            imageMus.put("url", songs.get(i).getArtist().getImage().getUrl());
+            musician.put("image",imageMus);
+
+            song.put("artist",musician);
+    
+            response.put(song);
+            
+        }
+    
+        return response.toString();
+    }
+
+    @GetMapping("/songs/{id}")
+    public String getSong(
+        @PathVariable Long id
+    ){
+        Song s = songRepository.getOne(id);
+
+        JSONObject song = new JSONObject();
+        song.put("title", s.getTitle());
+        song.put("album", s.getAlbum());
+        song.put("description",s.getDescription());
+        song.put("track", s.getTrack());
+        song.put("length", s.getLength());
+        song.put("url", s.getUrl());
+        
+        JSONObject musician = new JSONObject();
+        musician.put("id", s.getArtist().getId());
+        musician.put("name", s.getArtist().getName());
+        musician.put("tagline", s.getArtist().getTagline());
+        musician.put("website", s.getArtist().getWebsite());
+        musician.put("bio", s.getArtist().getBio());
+        musician.put("pronouns", s.getArtist().getPronouns());
+
+        JSONObject banner = new JSONObject();
+        banner.put("id", s.getArtist().getBanner().getId());
+        banner.put("url", s.getArtist().getBanner().getUrl());
+        musician.put("banner",banner);
+
+        JSONObject imageMus = new JSONObject();
+        imageMus.put("id", s.getArtist().getImage().getId());
+        imageMus.put("url", s.getArtist().getImage().getUrl());
+        musician.put("image",imageMus);
+
+        song.put("artist",musician);
+
+        return song.toString();
+    }
+
+    @GetMapping("/songs/artist/{id}")
+    public String getSongByArtist(
+        @PathVariable Long id
+    ){
+        Musician m = musicianRepository.getOne(id);
+        List<Song> songs = songRepository.findAllByArtistOrderByIdDesc(m);
+
+        JSONArray response = new JSONArray();
+
+        for(int i = 0; i < songs.size();i++){
+
+            JSONObject song = new JSONObject();
+            song.put("title", songs.get(i).getTitle());
+            song.put("album", songs.get(i).getAlbum());
+            song.put("description",songs.get(i).getDescription());
+            song.put("track", songs.get(i).getTrack());
+            song.put("length", songs.get(i).getLength());
+            song.put("url", songs.get(i).getUrl());
+            
+            JSONObject musician = new JSONObject();
+            musician.put("id", songs.get(i).getArtist().getId());
+            musician.put("name", songs.get(i).getArtist().getName());
+            musician.put("tagline", songs.get(i).getArtist().getTagline());
+            musician.put("website", songs.get(i).getArtist().getWebsite());
+            musician.put("bio", songs.get(i).getArtist().getBio());
+            musician.put("pronouns", songs.get(i).getArtist().getPronouns());
+    
+            JSONObject banner = new JSONObject();
+            banner.put("id", songs.get(i).getArtist().getBanner().getId());
+            banner.put("url", songs.get(i).getArtist().getBanner().getUrl());
+            musician.put("banner",banner);
+    
+            JSONObject imageMus = new JSONObject();
+            imageMus.put("id", songs.get(i).getArtist().getImage().getId());
+            imageMus.put("url", songs.get(i).getArtist().getImage().getUrl());
+            musician.put("image",imageMus);
+
+            song.put("artist",musician);
+    
+            response.put(song);
+            
+        }
+    
+        return response.toString();
     }
 
     

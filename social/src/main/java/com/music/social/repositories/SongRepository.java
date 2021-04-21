@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
 
-    List<Song> findAllByArtist(Musician musician);
+    List<Song> findAllByArtistOrderByIdDesc(Musician musician);
     List<Song> findAllByOrderByIdAsc();
     List<Song> findAllByAlbum(String album);
     List<Song> findAllByTitle(String title);
