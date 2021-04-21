@@ -1,14 +1,32 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Feed from '../views/Feed.vue'
+import Login from '../views/Login.vue'
+import RegisterMusician from '../views/RegisterMusician.vue'
+import UploadSong from '../views/UploadSong.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Feed',
+    component: Feed
+  },
+  {
+    path: '/musician',
+    name: 'RegisterMusician',
+    component: RegisterMusician
+  },
+  {
+    path: '/login',
+    name: "Login",
+    component: Login
+  },
+  {
+    path: '/song/upload',
+    name: "Upload Song",
+    component: UploadSong
   },
   {
     path: '/about',

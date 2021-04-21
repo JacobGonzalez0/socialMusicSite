@@ -13,6 +13,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAll();
     List<Post> findAllByMusician(Musician m);
+    List<Post> findAllByOrderByIdAsc();
+    List<Post> findAllByOrderByIdDesc();
+    List<Post> findAllByMusicianOrderByIdAsc(Musician m);
+    List<Post> findAllByMusicianOrderByIdDesc(Musician m);
     Post getOne(long id);
 
 }
