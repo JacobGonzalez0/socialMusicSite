@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Feed from '../views/Feed.vue'
 import Login from '../views/Login.vue'
 import RegisterMusician from '../views/RegisterMusician.vue'
+import RegisterUser from '../views/RegisterUser.vue'
 import UploadSong from '../views/UploadSong.vue'
 
 Vue.use(VueRouter)
@@ -17,6 +18,11 @@ const routes = [
     path: '/musician',
     name: 'RegisterMusician',
     component: RegisterMusician
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterUser
   },
   {
     path: '/login',
