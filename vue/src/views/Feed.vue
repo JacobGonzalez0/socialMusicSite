@@ -132,7 +132,14 @@ export default {
     }
       
   },
+  beforeMount: function(){
+    //redirect if user is not logged in
+    if(!localStorage.getItem("user")){
+      this.$router.push('/login');
+    }
+  },
   mounted: function(){
+    
     this.getPosts()
   }
 }
